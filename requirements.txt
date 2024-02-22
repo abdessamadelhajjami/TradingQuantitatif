@@ -1,2 +1,6 @@
 yfinance
 streamlit
+datetime
+pandas 
+cufflinks 
+plotly.offline 
