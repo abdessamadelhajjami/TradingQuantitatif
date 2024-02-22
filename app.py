@@ -86,7 +86,7 @@ rsi_lower= exp_rsi.number_input(label="RSI Lower",
    max_value=50, value=30, 
    step=1)
 
-st.title("A simple web app for technical analysis")
+st.title("A kaloui web app for technical analysis")
 st.write("""
    ### User manual
    * you can select any company from the S&P 500 constituents
