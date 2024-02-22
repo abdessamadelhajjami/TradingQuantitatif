@@ -5,7 +5,7 @@ import datetime
 # Télécharger les données du CAC40 des 6 derniers mois
 end_date = datetime.datetime.now()
 start_date = end_date - datetime.timedelta(days=6*30)
-cac40_data = yf.download('^FCHI', start=30/12/2023, end=20/02/2024)
+cac40_data = yf.download("AAPL", start=30/12/2023, end=20/02/2024, progress=False)
 
 # Créer l'application Streamlit
 st.title('Analyse du CAC40')
