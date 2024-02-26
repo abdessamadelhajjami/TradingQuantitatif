@@ -9,7 +9,7 @@ cf.go_offline()
 
 @st.cache
 def get_sp500_components():
-  df = pd.read_html("https://fr.wikipedia.org/wiki/CAC_40#Composition_actuelle")
+  df = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")
   df = df[0]
   tickers = df["Symbol"].to_list()
   tickers_companies_dict = dict(
