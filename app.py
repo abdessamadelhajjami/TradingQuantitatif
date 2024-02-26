@@ -66,14 +66,7 @@ columns_to_show = data_exp.multiselect(
    default=available_cols
 )
 
-data_exp.dataframe(df[columns_to_show])
-csv_file = convert_df_to_csv(df[columns_to_show])
-data_exp.download_button(
-  label="Download selected as CSV",
-  data=csv_file,
-  file_name=f"{ticker}_stock_prices.csv",
-  mime="text/csv",
-)
+
 
 title_str = f"{tickers_companies_dict[ticker]}'s stock price"
 qf = cf.QuantFig(df, title=title_str)
