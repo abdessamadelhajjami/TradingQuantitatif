@@ -66,6 +66,9 @@ columns_to_show = data_exp.multiselect(
    default=available_cols
 )
 
+data_exp.dataframe(df[columns_to_show])
+csv_file = convert_df_to_csv(df[columns_to_show])
+
 
 
 title_str = f"{tickers_companies_dict[ticker]}'s stock price"
