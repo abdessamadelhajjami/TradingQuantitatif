@@ -48,43 +48,43 @@ if start_date > end_date:
 st.sidebar.header("Technical Analysis Parameters")
 volume_flag = st.sidebar.checkbox(label="Add volume")
 
-# exp_sma = st.sidebar.expander("SMA")
-# sma_flag = exp_sma.checkbox(label="Add SMA")
-# sma_periods= exp_sma.number_input(
-#   label="SMA Periods", 
-#   min_value=1, 
-#   max_value=50, 
-#   value=20, 
-#   step=1
-# )
+exp_sma = st.sidebar.expander("SMA")
+sma_flag = exp_sma.checkbox(label="Add SMA")
+sma_periods= exp_sma.number_input(
+  label="SMA Periods", 
+  min_value=1, 
+  max_value=50, 
+  value=20, 
+  step=1
+)
 
-# exp_bb = st.sidebar.expander("Bollinger Bands")
-# bb_flag = exp_bb.checkbox(label="Add Bollinger Bands")
-# bb_periods= exp_bb.number_input(label="BB Periods", 
-#                              min_value=1, max_value=50, 
-#                              value=20, step=1)
-# bb_std= exp_bb.number_input(label="# of standard deviations", 
-#                              min_value=1, max_value=4, 
-#                              value=2, step=1)
+exp_bb = st.sidebar.expander("Bollinger Bands")
+bb_flag = exp_bb.checkbox(label="Add Bollinger Bands")
+bb_periods= exp_bb.number_input(label="BB Periods", 
+                             min_value=1, max_value=50, 
+                             value=20, step=1)
+bb_std= exp_bb.number_input(label="# of standard deviations", 
+                             min_value=1, max_value=4, 
+                             value=2, step=1)
 
 
-# exp_rsi = st.sidebar.expander("Relative Strength Index")
-# rsi_flag = exp_rsi.checkbox(label="Add RSI")
-# rsi_periods= exp_rsi.number_input(
-#     label="RSI Periods", 
-#     min_value=1, 
-#     max_value=50, 
-#     value=20, 
-#     step=1
-# )
-# rsi_upper= exp_rsi.number_input(label="RSI Upper", 
-#     min_value=50, 
-#     max_value=90, value=70, 
-#     step=1)
-# rsi_lower= exp_rsi.number_input(label="RSI Lower", 
-#    min_value=10, 
-#    max_value=50, value=30, 
-#    step=1)
+exp_rsi = st.sidebar.expander("Relative Strength Index")
+rsi_flag = exp_rsi.checkbox(label="Add RSI")
+rsi_periods= exp_rsi.number_input(
+    label="RSI Periods", 
+    min_value=1, 
+    max_value=50, 
+    value=20, 
+    step=1
+)
+rsi_upper= exp_rsi.number_input(label="RSI Upper", 
+    min_value=50, 
+    max_value=90, value=70, 
+    step=1)
+rsi_lower= exp_rsi.number_input(label="RSI Lower", 
+   min_value=10, 
+   max_value=50, value=30, 
+   step=1)
 
 st.title("A Simple web app for technical analysis")
 st.write("""
