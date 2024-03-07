@@ -4,4 +4,4 @@ datetime
 pandas 
 cufflinks 
 plotly
-scipy.signal
+scipy
