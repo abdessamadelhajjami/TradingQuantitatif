@@ -29,7 +29,7 @@ def load_data(symbol, start, end):
 def convert_df_to_csv(df):
   return df.to_csv().encode("utf-8")
 
-@st.cache
+
 @st.cache
 def detect_pivots(df, window=5):
     """
