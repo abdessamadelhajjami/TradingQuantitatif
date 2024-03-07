@@ -106,13 +106,13 @@ rsi_lower= exp_rsi.number_input(label="RSI Lower",
 # pivot_flag = st.sidebar.checkbox("Add Pivot Points")
 # pivot_window = 5  # Une valeur par défaut
 
-if pivot_flag:
-    pivot_window = st.sidebar.number_input("Pivot Detection Window",
-                                           min_value=3,
-                                           max_value=25,
-                                           value=5,
-                                           step=2,
-                                           help="Choose an odd number for the best results")
+# if pivot_flag:
+#     pivot_window = st.sidebar.number_input("Pivot Detection Window",
+#                                            min_value=3,
+#                                            max_value=25,
+#                                            value=5,
+#                                            step=2,
+#                                            help="Choose an odd number for the best results")
 
 
 st.title("A Simple web app for technical analysis")
