@@ -1,6 +1,7 @@
 import yfinance as yf
 import streamlit as st
 import datetime
+import numpy as np
 import pandas as pd
 import cufflinks as cf
 from plotly.offline import iplot
