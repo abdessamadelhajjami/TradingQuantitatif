@@ -169,8 +169,6 @@ if pivot_flag:
     st.plotly_chart(fig)
 
 
-fig = qf.iplot(asFigure=True)
-st.plotly_chart(fig)
 
 
 
