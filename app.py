@@ -153,13 +153,9 @@ if rsi_flag:
              showbands=True)
 
 if pivot_flag:
-    pivot_highs, pivot_lows = detect_pivots(df, pivot_window)
-    
-    # Ajouter les points de pivot dans la visualisation
-    if not pivot_highs.empty:
-        qf.add_scatter(x=pivot_highs.index, y=pivot_highs.values, name='Pivot Highs', mode='markers', marker=dict(color='green', size=5))
-    if not pivot_lows.empty:
-        qf.add_scatter(x=pivot_lows.index, y=pivot_lows.values, name='Pivot Lows', mode='markers', marker=dict(color='red', size=5))
+    fig.add_trace(go.Scatter(x=pivot_highs.index, y=pivot_highs, mode='markers', marker=dict(color='green'), name='Pivot Highs'))
+    fig.add_trace(go.Scatter(x=pivot_lows.index, y=pivot_lows, mode='markers', marker=dict(color='red'), name='Pivot Lows'))
+
 
 fig = qf.iplot(asFigure=True)
 st.plotly_chart(fig)
