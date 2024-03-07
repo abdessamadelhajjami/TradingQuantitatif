@@ -32,16 +32,13 @@ def convert_df_to_csv(df):
 
 @st.cache
 def detect_pivots(df, window=5):
-    """
-    Identifie les indices des pivots hauts et bas dans un DataFrame de prix.
-    
-    :param df: DataFrame contenant les données de prix.
-    :param window: La fenêtre pour détecter les pivots.
-    :return: Indices des pivots hauts et bas.
-    """
     high_pivots_idx = argrelextrema(df['Close'].values, np.greater_equal, order=window)[0]
     low_pivots_idx = argrelextrema(df['Close'].values, np.less_equal, order=window)[0]
-    return high_pivots_idx, low_pivots_idx
+    # Création de Series pour les valeurs de pivot
+    pivot_highs = pd.Series(df['Close'].iloc[high_pivots_idx], index=df.index[high_pivots_idx])
+    pivot_lows = pd.Series(df['Close'].iloc[low_pivots_idx], index=df.index[low_pivots_idx])
+    return pivot_highs, pivot_lows
+
 
 
 st.sidebar.header("Stock Parameters")
@@ -105,6 +102,12 @@ rsi_lower= exp_rsi.number_input(label="RSI Lower",
    max_value=50, value=30, 
    step=1)
 
+pivot_flag = st.sidebar.checkbox("Show Pivot Points", value=False)
+pivot_window = 5
+if pivot_flag:
+    pivot_window = st.sidebar.number_input("Pivot Detection Window Size", min_value=1, max_value=50, value=5, step=1)
+
+
 
 
 
@@ -116,20 +119,6 @@ st.write("""
 
 df = load_data(ticker, start_date, end_date)
 
-pivot_flag = st.sidebar.checkbox('Show Pivot Points', value=False)
-pivot_window = 5  # Définition d'une valeur par défaut pour la fenêtre de détection des pivots
-
-if pivot_flag:
-    pivot_window = st.sidebar.number_input('Pivot Detection Window Size',
-                                           value=5, min_value=3, max_value=25, step=2)
-
-
-if pivot_flag:
-    high_pivots_idx, low_pivots_idx = detect_pivots(df, window=pivot_window)
-
-    # Préparation pour la visualisation des pivots
-    pivot_highs = df.loc[high_pivots_idx, 'Close']
-    pivot_lows = df.loc[low_pivots_idx, 'Close']
 
 data_exp = st.expander("Preview data")
 available_cols = df.columns.tolist()
@@ -162,10 +151,15 @@ if rsi_flag:
                rsi_upper=rsi_upper,
                rsi_lower=rsi_lower,
              showbands=True)
-# Ajout des pivots à la visualisation
+
 if pivot_flag:
-    qf.add_scatter(x=pivot_highs.index, y=pivot_highs, name='Pivot High', mode='markers', marker=dict(color='green', size=5))
-    qf.add_scatter(x=pivot_lows.index, y=pivot_lows, name='Pivot Low', mode='markers', marker=dict(color='red', size=5))
+    pivot_highs, pivot_lows = detect_pivots(df, pivot_window)
+    
+    # Ajouter les points de pivot dans la visualisation
+    if not pivot_highs.empty:
+        qf.add_scatter(x=pivot_highs.index, y=pivot_highs.values, name='Pivot Highs', mode='markers', marker=dict(color='green', size=5))
+    if not pivot_lows.empty:
+        qf.add_scatter(x=pivot_lows.index, y=pivot_lows.values, name='Pivot Lows', mode='markers', marker=dict(color='red', size=5))
 
 fig = qf.iplot(asFigure=True)
 st.plotly_chart(fig)
