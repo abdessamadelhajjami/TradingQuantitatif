@@ -40,6 +40,69 @@ def detect_pivots(df, window=5):
     pivot_lows = pd.Series(df['Close'].iloc[low_pivots_idx], index=df.index[low_pivots_idx])
     return pivot_highs, pivot_lows
 
+@st.cache
+def is_line_valid(df, start_index, end_index, start_value, end_value):
+    """
+    Vérifie si la ligne de tendance entre deux points de pivot ne coupe aucun prix entre eux.
+    
+    :param df: DataFrame contenant les données de prix.
+    :param start_index: L'indice du premier point de pivot.
+    :param end_index: L'indice du second point de pivot.
+    :param start_value: La valeur du prix au premier point de pivot.
+    :param end_value: La valeur du prix au second point de pivot.
+    :return: Booléen indiquant si la ligne est valide ou non.
+    """
+    # Calculez la pente de la ligne
+    slope = (end_value - start_value) / (end_index - start_index)
+    
+    # Pour chaque point entre start_index et end_index, vérifiez si le prix est sous la ligne
+    for i in range(start_index + 1, end_index):
+        # Prix prédit par la ligne de tendance à l'indice i
+        predicted_price = start_value + slope * (i - start_index)
+        
+        # Si un prix réel dépasse la ligne prédite, la ligne n'est pas valide
+        if df.iloc[i]['Close'] > predicted_price:
+            return False
+    
+    return True
+
+@st.cache
+def measure_trendline_strength(df, start_index, end_index, start_value, end_value, threshold=0.02):
+    """
+    Mesure la force d'une ligne de tendance en comptant le nombre de fois où le prix
+    s'approche de la ligne sans la couper, basé sur un seuil de proximité.
+
+    :param df: DataFrame contenant les données de prix.
+    :param start_index: L'indice du premier point de pivot.
+    :param end_index: L'indice du second point de pivot.
+    :param start_value: La valeur du prix au premier point de pivot.
+    :param end_value: La valeur du prix au second point de pivot.
+    :param threshold: Le seuil de proximité en pourcentage du prix.
+    :return: Le nombre de fois où les prix sont proches de la ligne sans la couper.
+    """
+    # Calculez la pente de la ligne
+    slope = (end_value - start_value) / (end_index - start_index)
+    # Initialisez le compteur de proximité
+    proximity_count = 0
+    
+    for i in range(start_index + 1, end_index):
+        # Prix prédit par la ligne de tendance à l'indice i
+        predicted_price = start_value + slope * (i - start_index)
+        actual_price = df.iloc[i]['Close']
+        
+        # Calculez la distance absolue entre le prix prédit et le prix réel
+        distance = abs(predicted_price - actual_price)
+        
+        # Calculez le seuil de proximité en termes de prix
+        price_threshold = actual_price * threshold
+        
+        # Si la distance est inférieure au seuil de proximité et que le prix ne coupe pas la ligne, augmentez le compteur
+        if distance <= price_threshold:
+            proximity_count += 1
+
+    return proximity_count
+
+
 
 
 st.sidebar.header("Stock Parameters")
@@ -108,6 +171,18 @@ pivot_window = 5
 if pivot_flag:
     pivot_window = st.sidebar.number_input("Pivot Detection Window Size", min_value=1, max_value=50, value=5, step=1)
 
+# Dans la partie de la sidebar pour les paramètres de l'analyse technique
+st.sidebar.header("Trend Lines Parameters")
+# Option pour activer/désactiver l'affichage des lignes de tendance
+show_trend_lines = st.sidebar.checkbox("Show Trend Lines", value=False)
+
+# Si les lignes de tendance sont activées, afficher plus d'options
+if show_trend_lines:
+    # Option pour choisir le nombre minimum de contacts pour une ligne de tendance significative
+    min_contacts = st.sidebar.number_input("Minimum Contacts for Significance", min_value=2, max_value=10, value=2, step=1)
+
+
+
 
 
 
@@ -164,6 +239,27 @@ else:
     fig = qf.iplot(asFigure=True)
 
 # Affichez le graphique final avec toutes les modifications appliquées
+# Assurez-vous que cette logique s'exécute seulement si show_trend_lines est activé
+if show_trend_lines and pivot_flag:
+    pivot_highs, pivot_lows = detect_pivots(df, pivot_window)
+    fig = qf.iplot(asFigure=True)
+
+    # Exemple simplifié avec les points de pivot hauts
+    for start_idx in range(len(pivot_highs) - 1):
+        for end_idx in range(start_idx + 1, len(pivot_highs)):
+            start_date, start_value = pivot_highs.index[start_idx], pivot_highs.iloc[start_idx]
+            end_date, end_value = pivot_highs.index[end_idx], pivot_highs.iloc[end_idx]
+            
+            if is_line_valid(df, start_date, end_date, start_value, end_value):
+                line_strength = measure_trendline_strength(df, start_date, end_date, start_value, end_value)
+                
+                # Tracez la ligne si elle a une force supérieure à un seuil, par exemple 3
+                if line_strength > min_contacts:  # Utilisez min_contacts comme seuil de force
+                    fig.add_shape(type="line", x0=start_date, y0=start_value, x1=end_date, y1=end_value,
+                                  line=dict(color="RoyalBlue", width=2))
+
+    st.plotly_chart(fig)
+
 st.plotly_chart(fig)
 
 
