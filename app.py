@@ -154,8 +154,19 @@ if rsi_flag:
              showbands=True)
 
 if pivot_flag:
-    fig.add_trace(go.Scatter(x=pivot_highs.index, y=pivot_highs, mode='markers', marker=dict(color='green'), name='Pivot Highs'))
-    fig.add_trace(go.Scatter(x=pivot_lows.index, y=pivot_lows, mode='markers', marker=dict(color='red'), name='Pivot Lows'))
+    pivot_highs, pivot_lows = detect_pivots(df, pivot_window)
+    
+    fig = qf.iplot(asFigure=True)
+
+    # Pour chaque pivot haut, ajouter une annotation
+    for date, value in pivot_highs.items():
+        fig.add_annotation(x=date, y=value, text="PH", showarrow=True, arrowhead=1, arrowsize=1, arrowwidth=2, arrowcolor="green")
+
+    # Pour chaque pivot bas, ajouter une annotation
+    for date, value in pivot_lows.items():
+        fig.add_annotation(x=date, y=value, text="PL", showarrow=True, arrowhead=1, arrowsize=1, arrowwidth=2, arrowcolor="red")
+
+    st.plotly_chart(fig)
 
 
 fig = qf.iplot(asFigure=True)
