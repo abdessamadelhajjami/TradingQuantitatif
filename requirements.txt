@@ -5,3 +5,4 @@ pandas
 cufflinks 
 plotly
 scipy
+numpy
