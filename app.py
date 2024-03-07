@@ -4,6 +4,9 @@ import datetime
 import pandas as pd
 import cufflinks as cf
 from plotly.offline import iplot
+
+from scipy.signal import argrelextrema
+
 cf.go_offline()
 
 
@@ -101,18 +104,7 @@ rsi_lower= exp_rsi.number_input(label="RSI Lower",
    max_value=50, value=30, 
    step=1)
 
-# Ajouter dans la partie de configuration des paramètres techniques dans la sidebar
-# st.sidebar.header("Pivot Parameters")
-# pivot_flag = st.sidebar.checkbox("Add Pivot Points")
-# pivot_window = 5  # Une valeur par défaut
 
-# if pivot_flag:
-#     pivot_window = st.sidebar.number_input("Pivot Detection Window",
-#                                            min_value=3,
-#                                            max_value=25,
-#                                            value=5,
-#                                            step=2,
-#                                            help="Choose an odd number for the best results")
 
 
 st.title("A Simple web app for technical analysis")
@@ -122,6 +114,14 @@ st.write("""
   """)
 
 df = load_data(ticker, start_date, end_date)
+
+pivot_flag = st.sidebar.checkbox('Show Pivot Points', value=False)
+pivot_window = 5  # Définition d'une valeur par défaut pour la fenêtre de détection des pivots
+
+if pivot_flag:
+    pivot_window = st.sidebar.number_input('Pivot Detection Window Size',
+                                           value=5, min_value=3, max_value=25, step=2)
+
 
 if pivot_flag:
     high_pivots_idx, low_pivots_idx = detect_pivots(df, window=pivot_window)
