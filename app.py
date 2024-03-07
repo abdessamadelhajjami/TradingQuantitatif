@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import cufflinks as cf
 from plotly.offline import iplot
+import plotly.graph_objs as go
 
 from scipy.signal import argrelextrema
 
