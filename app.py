@@ -52,19 +52,24 @@ def is_line_valid(df, start_index, end_index, start_value, end_value):
     :param end_value: La valeur du prix au second point de pivot.
     :return: Booléen indiquant si la ligne est valide ou non.
     """
+    # Obtenez les prix correspondant aux dates des points de pivot
+    start_price = df.loc[start_index, 'Close']
+    end_price = df.loc[end_index, 'Close']
+    
     # Calculez la pente de la ligne
-    slope = (end_value - start_value) / (end_index - start_index)
+    slope = (end_price - start_price) / (end_index - start_index)
     
     # Pour chaque point entre start_index et end_index, vérifiez si le prix est sous la ligne
     for i in range(start_index + 1, end_index):
         # Prix prédit par la ligne de tendance à l'indice i
-        predicted_price = start_value + slope * (i - start_index)
+        predicted_price = start_price + slope * (i - start_index)
         
         # Si un prix réel dépasse la ligne prédite, la ligne n'est pas valide
-        if df.iloc[i]['Close'] > predicted_price:
+        if df.loc[i, 'Close'] > predicted_price:
             return False
     
     return True
+
 
 @st.cache
 def measure_trendline_strength(df, start_index, end_index, start_value, end_value, threshold=0.02):
