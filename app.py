@@ -141,37 +141,30 @@ data_exp.download_button(
 title_str = f"{tickers_companies_dict[ticker]}'s stock price"
 qf = cf.QuantFig(df, title=title_str)
 if volume_flag:
-   qf.add_volume()
+    qf.add_volume()
 if sma_flag:
-   qf.add_sma(periods=sma_periods)
+    qf.add_sma(periods=sma_periods)
 if bb_flag:
-   qf.add_bollinger_bands(periods=bb_periods,
-                           boll_std=bb_std)
+    qf.add_bollinger_bands(periods=bb_periods, boll_std=bb_std)
 if rsi_flag:
-   qf.add_rsi(periods=rsi_periods,
-               rsi_upper=rsi_upper,
-               rsi_lower=rsi_lower,
-             showbands=True)
+    qf.add_rsi(periods=rsi_periods, rsi_upper=rsi_upper, rsi_lower=rsi_lower, showbands=True)
 
+# Préparez le graphique pour l'ajout des annotations si l'option de pivot est sélectionnée
 if pivot_flag:
     pivot_highs, pivot_lows = detect_pivots(df, pivot_window)
-    
     fig = qf.iplot(asFigure=True)
 
-    # Pour chaque pivot haut, ajouter une annotation
+    # Ajoutez des annotations pour chaque pivot haut et bas
     for date, value in pivot_highs.items():
         fig.add_annotation(x=date, y=value, text="PH", showarrow=True, arrowhead=1, arrowsize=1, arrowwidth=2, arrowcolor="green")
-
-    # Pour chaque pivot bas, ajouter une annotation
     for date, value in pivot_lows.items():
         fig.add_annotation(x=date, y=value, text="PL", showarrow=True, arrowhead=1, arrowsize=1, arrowwidth=2, arrowcolor="red")
+else:
+    # Si les pivots ne sont pas sélectionnés, générez simplement le graphique sans annotations supplémentaires
+    fig = qf.iplot(asFigure=True)
 
-    st.plotly_chart(fig)
-
-
-
-
-
+# Affichez le graphique final avec toutes les modifications appliquées
+st.plotly_chart(fig)
 
 
 
