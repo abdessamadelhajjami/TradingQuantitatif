@@ -194,7 +194,7 @@ if show_trend_lines:
 
 st.title("A Simple web app for technical analysis")
 st.write("""
-   ### User manual
+  
    * you can select any company from the S&P 500 constituents
   """)
 
