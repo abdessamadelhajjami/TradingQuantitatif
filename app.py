@@ -192,7 +192,7 @@ if show_trend_lines:
 
 
 
-st.title("A Simple web app for technical analysis")
+st.title("Breakout Detection")
 st.write("""
   
    * you can select any company from the S&P 500 constituents
